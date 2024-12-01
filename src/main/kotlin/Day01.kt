@@ -1,8 +1,10 @@
 import kotlin.math.abs
 
+fun List<String>.readList(column: Int) : List<Int> = this.map { it.split("   ") }.map { it[column].toInt() }
+
 class Distances(locations: List<String>) {
-    private val firstList: List<Int> = locations.map { it.split("   ") }.map { it[0].toInt() }.sorted()
-    private val secondList: List<Int> = locations.map { it.split("   ") }.map { it[1].toInt() }.sorted()
+    private val firstList: List<Int> = locations.readList(0).sorted()
+    private val secondList: List<Int> = locations.readList(1).sorted()
 
     fun firstDistance() : Int {
         return nthDistance(0)
@@ -19,8 +21,8 @@ class Distances(locations: List<String>) {
 }
 
 class Similarities(locations: List<String>) {
-    private val firstList: List<Int> = locations.map { it.split("   ") }.map { it[0].toInt() }
-    private val secondList: List<Int> = locations.map { it.split("   ") }.map { it[1].toInt() }
+    private val firstList: List<Int> = locations.readList(0)
+    private val secondList: List<Int> = locations.readList(1)
 
     fun nthSimilarity(n: Int) : Int {
         val firstListValue = firstList[n]
