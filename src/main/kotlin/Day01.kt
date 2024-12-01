@@ -5,10 +5,15 @@ class Locations(locations: List<String>) {
     private val secondList: List<Int> = locations.map { it.split("   ") }.map { it[1].toInt() }.sorted()
 
     fun firstDistance() : Int {
-        return abs(firstList[0] - secondList[0])
+        return nthDistance(0)
     }
 
+    fun nthDistance(n: Int) : Int {
+        return abs(firstList[n] - secondList[n])
+    }
+
+
     fun totalDistances(): Int {
-        return 0
+        return firstList.foldIndexed(0) {index, total, _ -> total + nthDistance(index)}
     }
 }
