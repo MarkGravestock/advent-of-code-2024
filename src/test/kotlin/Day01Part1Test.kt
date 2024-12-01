@@ -17,12 +17,20 @@ class Day01Part1Test: FunSpec ({
         locations.firstDistance() shouldBeEqual 2
     }
 
-    test("it calculates the total distances") {
+    test("it calculates the test total distances") {
         val testInput = readTestInputForDay(1)
 
         val locations = Locations(testInput)
 
         locations.totalDistances() shouldBeEqual 11
+    }
+
+    test("it calculates the total distances") {
+        val testInput = readInputForDay(1)
+
+        val locations = Locations(testInput)
+
+        locations.totalDistances() shouldBeEqual 1258579
     }
 })
 

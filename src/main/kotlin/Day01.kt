@@ -12,7 +12,6 @@ class Locations(locations: List<String>) {
         return abs(firstList[n] - secondList[n])
     }
 
-
     fun totalDistances(): Int {
         return firstList.foldIndexed(0) {index, total, _ -> total + nthDistance(index)}
     }
