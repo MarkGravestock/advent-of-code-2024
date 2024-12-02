@@ -4,14 +4,18 @@ class Reports(reports: List<String>) {
 
     private val reportLines = reports.map { it.split(" ").filter { it.isNotBlank() }.map { it.toInt() } }
 
+    fun levels(): List<List<Int>> {
+        return reportLines.map { it.mapIndexed { index, _ ->
+            it[index] - it.getOrElse(index - 1) { 0 }
+        }.drop(1) }
+    }
+
     fun levels(lineNumber: Int): List<Int> {
-        return reportLines[lineNumber].mapIndexed { index, _ ->
-            reportLines[lineNumber][index] - reportLines[lineNumber].getOrElse(index - 1) { 0 }
-        }.drop(1)
+        return levels()[lineNumber]
     }
 
     fun safety(): List<Boolean> {
-        return reportLines.mapIndexed{ index, _ -> isSafe(index) }
+        return levels().map { isSafe(it) }
     }
 
     fun isSafe(levels: List<Int>): Boolean {
