@@ -14,13 +14,15 @@ class Reports(reports: List<String>) {
         return reportLines.mapIndexed{ index, _ -> isSafe(index) }
     }
 
-    fun isSafe(lineNumber: Int): Boolean {
-        val levels = levels(lineNumber)
-
+    fun isSafe(levels: List<Int>): Boolean {
         val allIncreasing = levels.all { it > 0 }
         val allDecreasing =  levels.all { it < 0 }
         val maxLevel = levels.map { abs(it) }.max()
         return (allIncreasing || allDecreasing) && (maxLevel in 1..3)
+    }
+
+    fun isSafe(lineNumber: Int): Boolean {
+        return isSafe(levels(lineNumber))
     }
 
     fun totalSafety(): Int {
