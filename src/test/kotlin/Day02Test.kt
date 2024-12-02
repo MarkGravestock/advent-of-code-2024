@@ -8,7 +8,7 @@ class Day02Part1Test: FunSpec ({
 
         val reports = Reports(testInput)
 
-        reports.levels(0) shouldBeEqual listOf(-1, -2, -2, -1)
+        reports.levels()[0] shouldBeEqual listOf(-1, -2, -2, -1)
     }
 
     test("it calculates the safety of the first test line") {
@@ -16,7 +16,7 @@ class Day02Part1Test: FunSpec ({
 
         val reports = Reports(testInput)
 
-        reports.isSafe(0) shouldBeEqual true
+        reports.safety()[0] shouldBeEqual true
     }
 
     test("it calculates the safety of the test lines") {

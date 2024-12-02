@@ -10,10 +10,6 @@ class Reports(reports: List<String>) {
         }.drop(1) }
     }
 
-    fun levels(lineNumber: Int): List<Int> {
-        return levels()[lineNumber]
-    }
-
     fun safety(): List<Boolean> {
         return levels().map { isSafe(it) }
     }
@@ -23,10 +19,6 @@ class Reports(reports: List<String>) {
         val allDecreasing =  levels.all { it < 0 }
         val maxLevel = levels.map { abs(it) }.max()
         return (allIncreasing || allDecreasing) && (maxLevel in 1..3)
-    }
-
-    fun isSafe(lineNumber: Int): Boolean {
-        return isSafe(levels(lineNumber))
     }
 
     fun totalSafety(): Int {
