@@ -8,8 +8,8 @@ class Reports(reports: List<String>) {
         return reportLines.map { it.levels() }
     }
 
-    fun List<Int>.levels(): List<Int> {
-        return this.mapIndexed { index, _ ->
+    private fun List<Int>.levels(): List<Int> {
+        return List(this.size) { index ->
             this[index] - this.getOrElse(index - 1) { 0 }
         }.drop(1)
     }
@@ -21,7 +21,7 @@ class Reports(reports: List<String>) {
     fun isSafe(levels: List<Int>): Boolean {
         val allIncreasing = levels.all { it > 0 }
         val allDecreasing =  levels.all { it < 0 }
-        val maxLevel = levels.map { abs(it) }.max()
+        val maxLevel = levels.maxOfOrNull { abs(it) }
         return (allIncreasing || allDecreasing) && (maxLevel in 1..3)
     }
 
