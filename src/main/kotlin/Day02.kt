@@ -4,14 +4,18 @@ class Reports(reports: List<String>) {
 
     private val reportLines = reports.map { it.split(" ").filter { it.isNotBlank() }.map { it.toInt() } }
 
-    fun levels(): List<List<Int>> {
-        return reportLines.map { it.mapIndexed { index, _ ->
-            it[index] - it.getOrElse(index - 1) { 0 }
-        }.drop(1) }
+    fun allLevels(): List<List<Int>> {
+        return reportLines.map { it.levels() }
     }
 
-    fun safety(): List<Boolean> {
-        return levels().map { isSafe(it) }
+    fun List<Int>.levels(): List<Int> {
+        return this.mapIndexed { index, _ ->
+            this[index] - this.getOrElse(index - 1) { 0 }
+        }.drop(1)
+    }
+
+    fun allSafety(): List<Boolean> {
+        return allLevels().map { isSafe(it) }
     }
 
     fun isSafe(levels: List<Int>): Boolean {
@@ -22,6 +26,24 @@ class Reports(reports: List<String>) {
     }
 
     fun totalSafety(): Int {
-        return safety().count { it }
+        return allSafety().count { it }
+    }
+
+    fun totalSafetyConsideringProblemDampener(): Int {
+        return linesWithProblemDampener().map { it.any { isSafe(it.levels()) } }.count { it }
+    }
+
+    fun linesWithProblemDampener(): List<List<List<Int>>> {
+        return reportLines.map { line ->
+            val mappedLines = line.mapIndexed { index, _ ->
+                val candidateDampener = line.toMutableList()
+                candidateDampener.removeAt(index)
+                candidateDampener.toList()
+            }
+
+            val all = mappedLines.toMutableList()
+            all.add(line)
+            all.toList()
+        }
     }
 }
