@@ -22,11 +22,11 @@ class Distances(locations: List<String>) {
 
 class Similarities(locations: List<String>) {
     private val firstList: List<Int> = locations.readList(0)
-    private val secondList: List<Int> = locations.readList(1)
+    private val secondCounts = locations.readList(1).groupBy { it }.mapValues { it.value.size }
 
     fun nthSimilarity(n: Int) : Int {
         val firstListValue = firstList[n]
-        return firstListValue * secondList.count { it == firstListValue }
+        return firstListValue * (secondCounts[firstListValue] ?: 0)
     }
 
     fun totalSimilarity() : Int {
