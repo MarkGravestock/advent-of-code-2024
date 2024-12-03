@@ -27,14 +27,14 @@ class AdvancedMultiplicator(val testInput: List<String>) {
         fun value(): Int { return arg1 * arg2 }
     }
 
-    val mulInstruction = "(mul\\(\\d{1,3},\\d{1,3}\\))|(do\\(\\))|(don't\\(\\))".toRegex()
+    val allInstructions = "(mul\\(\\d{1,3},\\d{1,3}\\))|(do\\(\\))|(don't\\(\\))".toRegex()
 
-    fun validInstructions(): List<String> {
-        return testInput.flatMap { mulInstruction.findAll(it) }.map { it.value }.toList()
+    fun extractInstructions(): List<String> {
+        return testInput.flatMap { allInstructions.findAll(it) }.map { it.value }.toList()
     }
 
-    fun multiplicationArguments(): List<Instruction> {
-        return validInstructions().map {
+    fun parseInstructions(): List<Instruction> {
+        return extractInstructions().map {
             when (it.substring(0..2)) {
                 "do(" -> Do()
                 "don" -> Dont()
@@ -53,11 +53,11 @@ class AdvancedMultiplicator(val testInput: List<String>) {
         var total = 0
         var enabled = true
 
-        for (instruction in multiplicationArguments()) {
+        for (instruction in parseInstructions()) {
             when (instruction) {
                 is Do -> { enabled = true }
                 is Dont -> { enabled = false }
-                is Multiply -> { if (enabled) total+= instruction.value() }
+                is Multiply -> { if (enabled) total += instruction.value() }
             }
         }
 

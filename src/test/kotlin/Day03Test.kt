@@ -56,11 +56,11 @@ class Day03Part2Test: FunSpec ({
         val sut = AdvancedMultiplicator(testInput)
 
         test("it can match all instructions") {
-            sut.validInstructions() shouldHaveSize 6
+            sut.extractInstructions() shouldHaveSize 6
         }
 
         xtest("it can match multiplication instructions") {
-            sut.multiplicationArguments() shouldBeEqual listOf(
+            sut.parseInstructions() shouldBeEqual listOf(
                 Multiply(2,4), Dont(), Multiply(5,5), Multiply(11,8), Do(), Multiply(8,5))
         }
 
