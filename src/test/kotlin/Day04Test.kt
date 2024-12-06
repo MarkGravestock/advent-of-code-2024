@@ -6,7 +6,7 @@ class Day04Part1Test: FunSpec ({
     context("Part 1 Solution test data") {
         val testInput =  readTestInputForDay(4)
 
-        val sut = WordSearch(testInput)
+        val sut = XmasWordSearch(testInput)
 
         test("it can read the bounds of the search") {
             sut.bounds().height.first shouldBe 0
@@ -19,7 +19,7 @@ class Day04Part1Test: FunSpec ({
             sut.readAt(9, 9) shouldBe "X"
         }
 
-        test("it returns null when outside the bounds of the search") {
+        test("it returns empty when outside the bounds of the search") {
             sut.readAt(-1, 10) shouldBe ""
         }
 
@@ -41,14 +41,14 @@ class Day04Part1Test: FunSpec ({
     test("it can count matches at all location in real file") {
         val input =  readInputForDay(4)
 
-        val sut = WordSearch(input)
+        val sut = XmasWordSearch(input)
 
         sut.totalMatches() shouldBe 2336
     }
 
 })
 
-class WordSearch(val fileInput: List<String>) {
+class XmasWordSearch(val fileInput: List<String>) {
     fun bounds(): Bounds {
         return Bounds(IntRange(0, fileInput.size - 1), IntRange(0, fileInput.first().length - 1))
     }
@@ -111,6 +111,78 @@ class WordSearch(val fileInput: List<String>) {
             lineIndex += changes.line
         }
         return results
+    }
+}
+
+class Day04Part2Test: FunSpec ({
+
+    context("Part 1 Solution test data") {
+        val testInput =  readTestInputForDay(4)
+
+        val sut = X_masWordSearch(testInput)
+
+        test("it can read candidates at a location") {
+            sut.readCandidatesAt(1, 2) shouldBe listOf("MAS", "MAS")
+        }
+
+        test("it can count matches at a location") {
+            sut.matchesAt(1,2) shouldBe true
+        }
+
+        test("it can count matches at all location") {
+            sut.totalMatches() shouldBe 9
+        }
+
+    }
+
+    test("it can count matches at all location in real file") {
+        val input =  readInputForDay(4)
+
+        val sut = X_masWordSearch(input)
+
+        sut.totalMatches() shouldBe 1831
+    }
+
+})
+
+class X_masWordSearch(val fileInput: List<String>) {
+    fun bounds(): Bounds {
+        return Bounds(IntRange(0, fileInput.size - 1), IntRange(0, fileInput.first().length - 1))
+    }
+
+    fun readAt(line: Int, column: Int): String {
+        if (bounds().height.contains(line) && bounds().width.contains(column)) {
+            return fileInput[line][column].toString()
+        }
+
+        return ""
+    }
+
+    fun totalMatches(): Int {
+        var total = 0
+        for (line in bounds().height) {
+            for (column in bounds().width) {
+                total += if (matchesAt(line, column)) 1 else 0
+            }
+        }
+        return total
+    }
+
+
+    fun matchesAt(line: Int, column: Int): Boolean {
+        return readCandidatesAt(line, column).all { it.equals("MAS") || it.equals("SAM") }
+    }
+
+    fun readCandidatesAt(line: Int, column: Int): List<String> {
+        val candidates = mutableListOf<String>()
+
+        val firstCandidate = readAt(line - 1, column -1) + readAt(line, column) + readAt(line + 1, column + 1)
+        val secondCandidate = readAt(line + 1, column - 1) + readAt(line, column) + readAt(line - 1, column + 1)
+
+        candidates.add(firstCandidate)
+        candidates.add(secondCandidate)
+
+        return candidates
     }
 }
 
