@@ -38,13 +38,13 @@ class AdvancedMultiplicator(val testInput: List<String>) {
             when (it.substring(0..2)) {
                 "do(" -> Do()
                 "don" -> Dont()
-                "mul" -> createMultiply(it)
+                "mul" -> createMultiplyInstruction(it)
                 else -> throw IllegalArgumentException("Invalid multiplication input: ${it}")
             }
         }
     }
 
-    private fun createMultiply(instruction: String): Multiply {
+    private fun createMultiplyInstruction(instruction: String): Multiply {
         val args = instruction.removePrefix("mul(").removeSuffix(")").split(",")
         return Multiply(args[0].toInt(), args[1].toInt())
     }
