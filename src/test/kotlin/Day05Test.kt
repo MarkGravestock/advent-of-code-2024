@@ -171,7 +171,6 @@ class PageOrdering(val fileInput: List<String>) {
             toReorder = correctlyReorder(toReorder)
         }
 
-
         return toReorder
     }
 
