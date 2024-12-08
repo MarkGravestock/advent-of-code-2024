@@ -4,6 +4,15 @@ Welcome to the Advent of Code[^aoc] Kotlin project created by [markgravestock][g
 
 In this repository, markgravestock is about to provide solutions for the puzzles using [Kotlin][kotlin] language.
 
+### Notes
+
+#### Day 6 Part 2
+
+- Key insight: To detect a loop, you can check if you are ever at the same coordinate in the same direction when you hit an obstruction.
+- TODO: Possibly you could detect at any coordinate you have visited if you are in the same direction and combine this with counting visited locations.
+
+### Hints
+
 If you're stuck with Kotlin-specific questions or anything related to this template, check out the following resources:
 
 - [Kotlin docs][docs]
