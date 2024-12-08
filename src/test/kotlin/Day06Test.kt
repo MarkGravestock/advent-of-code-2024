@@ -2,6 +2,10 @@ import io.kotest.core.spec.style.FunSpec
 import io.kotest.data.forAll
 import io.kotest.data.row
 import io.kotest.matchers.shouldBe
+import kotlin.math.atan
+import kotlin.math.cos
+import kotlin.math.sin
+import kotlin.math.sqrt
 
 class Day06Part1Test : FunSpec({
 
@@ -132,9 +136,38 @@ enum class Directions(val offset: Coordinate, var nextTurn: Directions?) {
     }
 }
 
+data class Difference(val gradient: Double, val distance: Double)
+
 data class Coordinate(val x: Int, val y: Int) {
     fun move(offset: Coordinate) : Coordinate {
         return Coordinate(x + offset.x, y + offset.y)
+    }
+
+    fun difference(other: Coordinate) : Difference {
+        return Difference(calculateGradient(x.toDouble(), y.toDouble(), other.x.toDouble(), other.y.toDouble()), calculateDistance(x.toDouble(), y.toDouble(), other.x.toDouble(), other.y.toDouble()))
+    }
+
+    fun calculateDistance(x1: Double, y1: Double, x2: Double, y2: Double): Double {
+        return sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
+    }
+
+    fun calculateGradient(x1: Double, y1: Double, x2: Double, y2: Double): Double {
+        if (x2 != x1) {
+            return (y2 - y1) / (x2 - x1)
+        }
+        throw IllegalArgumentException("Unexpected gradient")
+    }
+
+    fun move(difference: Difference, direction: Double = 1.0) : Coordinate {
+        val angle = atan(difference.gradient)
+        val dx = difference.distance * cos(angle) * direction
+        val dy = difference.distance * sin(angle) * direction
+
+        val newX = x + dx
+        val newY = y + dy
+
+        return Coordinate(newX.toInt(), newY.toInt())
+
     }
 }
 
