@@ -11,21 +11,57 @@ class Day08Part1Test : FunSpec({
         test("it can read the input") {
             val sut = AntennaLocations(testInput)
             sut.antennas() shouldHaveSize 2
-            sut.antennas().first { it.frequency == 'A' }.locations shouldBe mutableListOf(Coordinate(6, 5),Coordinate(8, 8), Coordinate(9, 9))
+            sut.antennas().first { it.frequency == 'A' }.locations shouldBe mutableListOf(
+                Coordinate(6, 5),
+                Coordinate(8, 8),
+                Coordinate(9, 9)
+            )
         }
 
         test("it can calculate the differences") {
-            Antenna('a', mutableListOf(Coordinate(4, 3), Coordinate(5, 5))).differences().map { it.second } shouldBe listOf(Difference(2.0,2.23606797749979))
+            Antenna('a', mutableListOf(Coordinate(4, 3), Coordinate(5, 5))).differences()
+                .map { it.second } shouldBe listOf(Difference(2.0, 2.23606797749979))
         }
 
         test("it can calculate the anti nodes") {
-            Antenna('a', mutableListOf(Coordinate(4, 3), Coordinate(5, 5))).antinodes() shouldBe listOf(Coordinate(6, 7), Coordinate(3, 1))
-            Antenna('a', mutableListOf(Coordinate(4, 3), Coordinate(5, 5), Coordinate(8, 4))).antinodes() shouldHaveSize 6
+            Antenna(
+                'a',
+                mutableListOf(Coordinate(4, 3), Coordinate(5, 5))
+            ).antinodes() shouldBe listOf(Coordinate(6, 7), Coordinate(3, 1))
+            Antenna(
+                'a',
+                mutableListOf(Coordinate(4, 3), Coordinate(5, 5), Coordinate(8, 4))
+            ).antinodes() shouldHaveSize 6
         }
 
-        xtest("it can calculate more anti nodes") {
-            Antenna('A', mutableListOf(Coordinate(6, 5),Coordinate(8, 8), Coordinate(9, 9))).antinodes() shouldContainExactlyInAnyOrder listOf(Coordinate(10, 10), Coordinate(10, 11), Coordinate(7, 7), Coordinate(4, 2), Coordinate(12, 13), Coordinate(3, 1))
-            Antenna('0', mutableListOf(Coordinate(4, 4),Coordinate(5, 2), Coordinate(8, 3), Coordinate(9, 1))).antinodes() shouldHaveSize 12
+        test("it can calculate more anti nodes") {
+            Antenna(
+                'A',
+                mutableListOf(Coordinate(6, 5), Coordinate(9, 9))
+            ).antinodes() shouldContainExactlyInAnyOrder listOf(
+                Coordinate(12, 13),
+                Coordinate(3, 1)
+            )
+            Antenna(
+                '0',
+                mutableListOf(
+                    Coordinate(4, 4),
+                    Coordinate(5, 2),
+                    Coordinate(8, 3),
+                    Coordinate(9, 1)
+                )
+            ).antinodes() shouldHaveSize 12
+            Antenna(
+                'A',
+                mutableListOf(Coordinate(6, 5), Coordinate(8, 8), Coordinate(9, 9))
+            ).antinodes() shouldContainExactlyInAnyOrder listOf(
+                Coordinate(10, 10),
+                Coordinate(10, 11),
+                Coordinate(7, 7),
+                Coordinate(4, 2),
+                Coordinate(12, 13),
+                Coordinate(3, 1)
+            )
         }
 
         xtest("it can calculate all the anti nodes") {
@@ -47,21 +83,22 @@ class Day08Part1Test : FunSpec({
 
 class AntennaLocations(val input: List<String>) {
 
-    fun inBounds(coordinate: Coordinate): Boolean {
-        return coordinate.y >= 0 && coordinate.y < input.size && coordinate.x < input.first().length && coordinate.x >= 0
-    }
-
-
-    fun antennas() : List<Antenna> {
+    fun antennas(): List<Antenna> {
         val antennas = mutableMapOf<Char, Antenna>()
 
-        input.forEachIndexed{ y, value -> value.forEachIndexed{ x, ant -> if (ant.isLetterOrDigit()) antennas.getOrPut(ant) { Antenna(ant)}.addLocation(Coordinate(x, y))  } }
+        input.forEachIndexed { y, value ->
+            value.forEachIndexed { x, ant ->
+                if (ant.isLetterOrDigit()) antennas.getOrPut(
+                    ant
+                ) { Antenna(ant) }.addLocation(Coordinate(x, y))
+            }
+        }
 
         return antennas.values.toList()
     }
 
-    fun visibleAntinodes() : List<Coordinate> {
-        return antennas().flatMap { it.antinodes() }.filter { inBounds(it) }
+    fun visibleAntinodes(): List<Coordinate> {
+        return antennas().flatMap { it.antinodes() }//.filter { inBounds(it) }
     }
 
 }
@@ -71,7 +108,7 @@ class Antenna(val frequency: Char, val locations: MutableList<Coordinate> = muta
         locations.add(coordinate)
     }
 
-    fun paris() : List<Pair<Coordinate, Coordinate>> {
+    fun paris(): List<Pair<Coordinate, Coordinate>> {
         if (locations.size == 0) {
             return emptyList()
         }
@@ -89,12 +126,21 @@ class Antenna(val frequency: Char, val locations: MutableList<Coordinate> = muta
         return combinations
     }
 
-    fun differences() : List<Pair<Coordinate, Difference>> {
+    fun differences(): List<Pair<Coordinate, Difference>> {
         return paris().map { Pair(it.first, it.first.difference(it.second)) }
     }
 
-    fun antinodes() : List<Coordinate> {
-        return differences().flatMap { listOf(it.first.move(Difference(it.second.gradient, it.second.distance * 2)), it.first.move(Difference(it.second.gradient, it.second.distance), -1.0)) }
+    fun antinodes(): List<Coordinate> {
+        return differences().flatMap {
+            listOf(
+                it.first.move(
+                    Difference(
+                        it.second.gradient,
+                        it.second.distance * 2
+                    )
+                ), it.first.move(Difference(it.second.gradient, it.second.distance), -1.0)
+            )
+        }
     }
 }
 

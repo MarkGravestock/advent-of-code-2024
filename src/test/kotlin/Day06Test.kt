@@ -2,10 +2,7 @@ import io.kotest.core.spec.style.FunSpec
 import io.kotest.data.forAll
 import io.kotest.data.row
 import io.kotest.matchers.shouldBe
-import kotlin.math.atan
-import kotlin.math.cos
-import kotlin.math.sin
-import kotlin.math.sqrt
+import kotlin.math.*
 
 class Day06Part1Test : FunSpec({
 
@@ -163,11 +160,10 @@ data class Coordinate(val x: Int, val y: Int) {
         val dx = difference.distance * cos(angle) * direction
         val dy = difference.distance * sin(angle) * direction
 
-        val newX = x + dx
-        val newY = y + dy
+        val newX = round(x + dx)
+        val newY = round(y + dy)
 
         return Coordinate(newX.toInt(), newY.toInt())
-
     }
 }
 
